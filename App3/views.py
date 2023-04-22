@@ -10,7 +10,7 @@ def agregar_equipo(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Equipo agregado con éxito.")
-            return HttpResponseRedirect('/App3/')
+            return HttpResponseRedirect('/App3/listaEquipos/')
         else:
             messages.error(request, "Por favor corrija los errores en el formulario.")
     else:
@@ -22,8 +22,7 @@ def agregar_jugador(request):
         form = JugadorForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Jugador agregado con éxito.")
-            return HttpResponseRedirect('/App3/')
+            return HttpResponseRedirect('/App3/listaJugadores/')
         else:
             messages.error(request, "Por favor corrija los errores en el formulario.")
     else:
@@ -35,8 +34,7 @@ def agregar_representante(request):
         form = RepresentanteForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Representante agregado con éxito.')
-            return HttpResponseRedirect('/App3/')
+            return HttpResponseRedirect('/App3/listaRepresentantes/')
         else:
             messages.error(request, "Por favor corrija los errores en el formulario.")
     else:
@@ -109,6 +107,15 @@ def listaRepresentantes(request):
         jugadores_por_representante[representante] = Jugador.objects.filter(representante=representante)
     return render(request, 'listaRepresentantes.html', {'jugadores_por_representante': jugadores_por_representante})
 
+def listaEquipos(request):
+    equipos = Equipo.objects.all()
+    jugadores_por_equipo = {}
+    for equipo in equipos:
+        jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
+    return render(request, 'listaEquipos.html', {'equipos': equipos, 'jugadores_por_equipo': jugadores_por_equipo})
+
+
+
 def eliminarJugador(request, id):
     
     if request.method == 'POST':
@@ -116,6 +123,14 @@ def eliminarJugador(request, id):
         jugador = Jugador.objects.get(id=id)
         jugador.delete()
         return redirect('/App3/listaJugadores/')
+
+def eliminarEquipo(request, id):
+    
+    if request.method == 'POST':
+        
+        equipo = Equipo.objects.get(id=id)
+        equipo.delete()
+        return redirect('/App3/listaEquipos/')
     
 def eliminarRepresentante(request, id):
     
@@ -126,7 +141,7 @@ def eliminarRepresentante(request, id):
         return redirect('/App3/listaRepresentantes/')
 
 # def eliminarEquipo(request, id):
-        
+
 #     if request.method == 'POST':
         
 #         equipo= Equipo.objects.get(id=id)

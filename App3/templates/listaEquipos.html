@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<div id="wrapper" style="padding-top: 10px; position: relative;">
+ 
+    {% for equipo, jugadores in jugadores_por_equipo.items %}
+    <h1 style="margin-top: 10px; margin-left: 20px; color: yellow">{{ equipo.nombre_equipo }}</h1>
+    <div style="margin-left: 20px;">
+    <form action="{% url 'EliminarEquipo' equipo.id %}" method="POST">{% csrf_token %}
+        <button type="submit">Eliminar</button>
+    </form>
+        </div>
+        {% if jugadores %}
+        <ul style="margin-top: 10px; margin-left: 20px">
+            {% for jugador in jugadores %}
+                <li>
+                    <p style="color: yellow; font-size: 15px">{{ jugador.nombre }} {{ jugador.apellido }} - Edad: {{ jugador.edad }} - Posición: {{ jugador.get_posicion_display }} - Equipo: {{ jugador.equipo.nombre_equipo }}</p>
+                </li>
+                <div style="margin-left: 30px;">
+                </div>   
+            {% endfor %}
+        </ul>
+    {% else %}
+        <ul style="margin-top: 10px;">
+        <p style="color: yellow; font-size: 15px; margin-left: 30px">Este representante no tiene jugadores.</p>
+        </ul>
+    {% endif %}
+    {% endfor %}
+
+
+    <div id="footer" style="position: absolute; bottom: 0; width: 100%">
+        &copy; Copyright 2023 by Salvador Inetti |
+        Design by Mamarracho Maker
+    </div>
+    
+</div>
+
+{% endblock contenidoQueCambia %}
