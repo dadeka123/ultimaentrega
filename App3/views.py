@@ -108,3 +108,29 @@ def listaRepresentantes(request):
     for representante in representantes:
         jugadores_por_representante[representante] = Jugador.objects.filter(representante=representante)
     return render(request, 'listaRepresentantes.html', {'jugadores_por_representante': jugadores_por_representante})
+
+def eliminarJugador(request, id):
+    
+    if request.method == 'POST':
+        
+        jugador = Jugador.objects.get(id=id)
+        jugador.delete()
+        return redirect('/App3/listaJugadores/')
+    
+def eliminarRepresentante(request, id):
+    
+    if request.method == 'POST':
+        
+        representante = Representante.objects.get(id=id)
+        representante.delete()
+        return redirect('/App3/listaRepresentantes/')
+
+# def eliminarEquipo(request, id):
+        
+#     if request.method == 'POST':
+        
+#         equipo= Equipo.objects.get(id=id)
+#         equipo.delete()
+#         return redirect('/App3/listaEquipo/')
+    
+    

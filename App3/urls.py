@@ -16,5 +16,7 @@ urlpatterns = [
     path('buscarRepresentante/', buscarRepresentante, name="BuscarRepresentante"),
     path('listaJugadores/', listaJugadores, name="ListaJugadores"),
     path('listaRepresentantes/', listaRepresentantes, name="ListaRepresentantes"),
+    path('eliminaJugador/<id>', eliminarJugador, name="EliminarJugador"),
+    path('eliminaRepresentante/<id>', eliminarRepresentante, name="EliminarRepresentante"),
 ]
 

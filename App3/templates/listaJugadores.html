@@ -6,19 +6,24 @@
 <div id="wrapper" style="padding-top: 10px; position: relative;">
  
 {% for equipo, jugadores in jugadores_por_equipo.items %}
-    <h1 style="margin-top: 10px; color: yellow">{{ equipo.nombre_equipo }}</h1>
+    <h1 style="margin-top: 10px; color: yellow; margin-left: 10px">{{ equipo.nombre_equipo }}</h1>
 
 {% if jugadores %}
         <ul style="margin-top: 10px;">
             {% for jugador in jugadores %}
                 <li>
-                    <p style="color: yellow; font-size: 15px">{{ jugador.nombre }} {{ jugador.apellido }} - Edad: {{ jugador.edad }} - Posición: {{ jugador.get_posicion_display }}</p>
+                    <p style="color: yellow; font-size: 15px; margin-left: 30px">{{ jugador.nombre }} {{ jugador.apellido }} - Edad: {{ jugador.edad }} - Posición: {{ jugador.get_posicion_display }}</p>
                 </li>
+                <div style="margin-left: 30px;">
+                    <form action="{% url 'EliminarJugador' jugador.id %}" method="POST">{% csrf_token %}
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </div>                            
             {% endfor %}
         </ul>
     {% else %}
         <ul style="margin-top: 10px;">
-        <p style="color: yellow; font-size: 15px">Este equipo no tiene jugadores.</p>
+        <p style="color: yellow; font-size: 15px; margin-left: 30px">Este equipo no tiene jugadores.</p>
         <>
     {% endif %}
 {% endfor %}
