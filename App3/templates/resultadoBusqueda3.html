@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<div id="wrapper" style="padding-top: 15px; position: relative; min-height: 100%;">
+    <p style="font-size: 24px; color: yellow; padding-top: 10px;">Resultado:</p>
+ <ul style="margin-left: 20px;">
+    {% if representantes %}
+
+    {% for representante in representantes %}
+    <li style="font-size: 20px; color: yellow; padding-top: 10px; margin-bottom: 10px;">
+        Nombre: {{ representante.nombre }}  <br>
+        Sitio web: {{ representante.sitio_web }}  <br>
+        Jugadores contratados:
+        <ul>
+        {% for jugador in representante.jugadores_contratados_nombre_apellido %}
+            <li>{{ jugador.0 }} {{ jugador.1 }}</li>
+        {% endfor %}
+        </ul>
+    </li>    
+    {% endfor %}
+        
+    </ul>
+    
+    {% else %}
+    
+    <li style="font-size: 20px; color: yellow; padding-top: 10px; margin-bottom: 10px;">
+        No se encontro un representante con ese nombre.
+    </li>
+    </ul>
+    
+    {% endif %}
+        
+    <div id="footer" style="position: absolute; bottom: 0; width: 100%; margin-left: 0px;">
+        <p>&copy; Copyright 2023 by Salvador Inetti | Design by Mamarracho Maker</p>
+    </div>
+        
+</div>
+
+{% endblock contenidoQueCambia %}

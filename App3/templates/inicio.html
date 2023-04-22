@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<div id="wrapper" style="padding-top: 15px; position: relative;">
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            {% if message.tags %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<div id="footer" style="position: absolute; bottom: 0; width: 100%">
+    &copy; Copyright 2023 by Salvador Inetti |
+    Design by Mamarracho Maker
+  </div>
+    
+</div>
+
+{% endblock contenidoQueCambia %}

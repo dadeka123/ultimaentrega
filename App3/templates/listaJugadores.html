@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<div id="wrapper" style="padding-top: 10px; position: relative;">
+ 
+{% for equipo, jugadores in jugadores_por_equipo.items %}
+    <h1 style="margin-top: 10px; color: yellow">{{ equipo.nombre_equipo }}</h1>
+
+{% if jugadores %}
+        <ul style="margin-top: 10px;">
+            {% for jugador in jugadores %}
+                <li>
+                    <p style="color: yellow; font-size: 15px">{{ jugador.nombre }} {{ jugador.apellido }} - Edad: {{ jugador.edad }} - Posición: {{ jugador.get_posicion_display }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <ul style="margin-top: 10px;">
+        <p style="color: yellow; font-size: 15px">Este equipo no tiene jugadores.</p>
+        <>
+    {% endif %}
+{% endfor %}
+
+  <div id="footer" style="position: absolute; bottom: 0; width: 100%">
+    &copy; Copyright 2023 by Salvador Inetti |
+    Design by Mamarracho Maker
+  </div>
+    
+</div>
+
+{% endblock contenidoQueCambia %}

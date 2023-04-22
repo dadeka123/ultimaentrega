@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  {% load static %}
+<title>Futbolacho</title>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="{% static 'styles.css' %}" />
+</head>
+<div id="wrapper">
+  <div id="header">
+    <h1 style="color: yellow; font-size: 36px;">La numbah one de fuchibola</h1>
+  </div>
+{% include 'navbar.html' %}
+ 
+<div class="clear"></div>
+{% block contenidoQueCambia %}
+    
+{% endblock contenidoQueCambia %}
+

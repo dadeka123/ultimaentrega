@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<div id="wrapper" style="padding-top: 20px; position: relative;">
+ 
+  <form action="{% url 'BuscarEquipo' %}" method="GET">{% csrf_token %}
+    <p><input type="text" name="Equipo" id="Equipo"></p>
+
+    <button type="submit">Buscar Equipo</button>
+  </form>
+
+  <div id="footer" style="position: absolute; bottom: 0; width: 100%">
+    &copy; Copyright 2023 by Salvador Inetti |
+    Design by Mamarracho Maker
+  </div>
+    
+</div>
+
+{% endblock contenidoQueCambia %}
