@@ -8,9 +8,14 @@
     {% for equipo, jugadores in jugadores_por_equipo.items %}
     <h1 style="margin-top: 10px; margin-left: 20px; color: yellow">{{ equipo.nombre_equipo }}</h1>
     <div style="margin-left: 20px;">
-    <form action="{% url 'EliminarEquipo' equipo.id %}" method="POST">{% csrf_token %}
-        <button type="submit">Eliminar</button>
-    </form>
+        <button style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px;">
+            <a href="{% url 'EditarEquipo' equipo.id %}" style="color: white; text-decoration: none;">Editar</a>
+        </button>
+
+        <button>
+            <form action="{% url 'EliminarEquipo' equipo.id %}" method="POST">{% csrf_token %}
+                <button type="submit" style="background-color: gray; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;">Eliminar</button>
+            </form>
         </div>
         {% if jugadores %}
         <ul style="margin-top: 10px; margin-left: 20px">
@@ -24,7 +29,7 @@
         </ul>
     {% else %}
         <ul style="margin-top: 10px;">
-        <p style="color: yellow; font-size: 15px; margin-left: 30px">Este representante no tiene jugadores.</p>
+        <p style="color: yellow; font-size: 15px; margin-left: 30px">Este equipo no tiene jugadores al momento.</p>
         </ul>
     {% endif %}
     {% endfor %}

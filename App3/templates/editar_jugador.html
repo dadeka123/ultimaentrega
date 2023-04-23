@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<div id="wrapper" style="padding-top: 10px; position: relative;">
+    <form action="{% url 'EditarJugador' id %}" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+  
+      <style>
+        label { font-size: 20px; color: yellow; }
+        .form-container { display: flex; justify-content: flex-start; align-items: center; }
+        .edit-button { margin-left: 10px; }
+      </style>
+  
+      <div class="form-container">
+        <input type="submit" value="Actualizar" class="edit-button">
+        <form action="{% url 'EliminarJugador' id %}" method="post">
+          {% csrf_token %}
+          <input type="submit" value="Eliminar" class="delete-button">
+        </form>
+      </div>
+    </form>
+    <div id="footer" style="position: absolute; bottom: 0; width: 100%">
+      &copy; Copyright 2023 by Salvador Inetti |
+      Design by Mamarracho Maker
+    </div>
+  </div>
+{% endblock contenidoQueCambia %}

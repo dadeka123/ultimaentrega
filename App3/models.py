@@ -10,16 +10,15 @@ class Equipo(models.Model):
     def __str__(self):
         return f"Equipo: {self.nombre_equipo} - Region: {self.region} - Fecha de fundación: {self.fecha_fundacion}"
 
-
 class Jugador(models.Model):
-
+    
     posiciones = (
         ('g', 'Golero'),
         ('d', 'Defensa'),
         ('m', 'Mediocampista'),
         ('f', 'Delantero'),
     )
-
+    
     nombre = models.CharField(max_length=200)
     apellido = models.CharField(max_length=50)
     lista_edades = [(i, str(i)) for i in range(1, 101)]
@@ -31,6 +30,7 @@ class Jugador(models.Model):
     def __str__(self):
         titular_str = "Titular" if self.titular else "Suplente"
         return f"Nombre: {self.nombre} {self.apellido} - Edad: {self.edad} - Equipo: {self.equipo.nombre_equipo} - Posición: {self.get_posicion_display()} - {titular_str}"
+   
 
 class Representante(models.Model):
     nombre = models.CharField(max_length=100)
@@ -45,4 +45,4 @@ class Representante(models.Model):
     def jugadores_contratados_nombre_apellido(self):
         return self.jugadores_contratados.all().values_list('nombre', 'apellido')
 
-    
+ 

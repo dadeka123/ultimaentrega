@@ -9,7 +9,6 @@ def agregar_equipo(request):
         form = EquipoForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Equipo agregado con éxito.")
             return HttpResponseRedirect('/App3/listaEquipos/')
         else:
             messages.error(request, "Por favor corrija los errores en el formulario.")
@@ -114,8 +113,6 @@ def listaEquipos(request):
         jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
     return render(request, 'listaEquipos.html', {'equipos': equipos, 'jugadores_por_equipo': jugadores_por_equipo})
 
-
-
 def eliminarJugador(request, id):
     
     if request.method == 'POST':
@@ -140,12 +137,44 @@ def eliminarRepresentante(request, id):
         representante.delete()
         return redirect('/App3/listaRepresentantes/')
 
-# def eliminarEquipo(request, id):
+def editar_jugador(request, id):
+    jugador = Jugador.objects.get(id=id)
+    
+    if request.method == 'POST':
+        form = JugadorForm(request.POST, instance=jugador)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/App3/listaJugadores/')
+        else:
+            messages.error(request, "Por favor corrija los errores en el formulario.")
+    else:
+        form = JugadorForm(instance=jugador)        
+    return render(request, 'editar_jugador.html', {'form': form, 'id': id})
 
-#     if request.method == 'POST':
-        
-#         equipo= Equipo.objects.get(id=id)
-#         equipo.delete()
-#         return redirect('/App3/listaEquipo/')
+def editar_equipo(request, id):
+    equipo = Equipo.objects.get(id=id)
     
+    if request.method == 'POST':
+        form = EquipoForm(request.POST, instance=equipo)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/App3/listaEquipos/')
+        else:
+            messages.error(request, "Por favor corrija los errores en el formulario.")
+    else:
+        form = EquipoForm(instance=equipo)        
+    return render(request, 'editar_equipo.html', {'form': form, 'id': id})
+
+def editar_representante(request, id):
+    representante = Representante.objects.get(id=id)
     
+    if request.method == 'POST':
+        form = RepresentanteForm(request.POST, instance=representante)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/App3/listaRepresentantes/')
+        else:
+            messages.error(request, "Por favor corrija los errores en el formulario.")
+    else:
+        form = RepresentanteForm(instance=representante)        
+    return render(request, 'editar_representante.html', {'form': form, 'id': id})
