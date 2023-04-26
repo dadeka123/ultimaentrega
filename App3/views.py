@@ -3,6 +3,10 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import EquipoForm, JugadorForm, RepresentanteForm
 from .models import *
+from django.views.generic import ListView, DeleteView
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def agregar_equipo(request):
     if request.method == 'POST':
@@ -90,13 +94,26 @@ def buscarRepresentante(request):
         form = RepresentanteForm()
         return render(request, "busquedaRepresentante.html", {'form': form, 'errors': form.errors})
 
-def listaJugadores(request):
+def listaJugadores(LoginRequiredMixin, request):
     
     equipos = Equipo.objects.all()
     jugadores_por_equipo = {}
     for equipo in equipos:
         jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
     return render(request, 'listaJugadores.html', {'jugadores_por_equipo': jugadores_por_equipo})
+
+class JugadorListView(LoginRequiredMixin, ListView):
+    model = Jugador
+    template_name = 'listaJugadores.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        equipos = Equipo.objects.all()
+        jugadores_por_equipo = {}
+        for equipo in equipos:
+            jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
+        context['jugadores_por_equipo'] = jugadores_por_equipo
+        return context
 
 def listaRepresentantes(request):
     
@@ -128,6 +145,7 @@ def eliminarEquipo(request, id):
         equipo = Equipo.objects.get(id=id)
         equipo.delete()
         return redirect('/App3/listaEquipos/')
+    
     
 def eliminarRepresentante(request, id):
     
@@ -178,3 +196,43 @@ def editar_representante(request, id):
     else:
         form = RepresentanteForm(instance=representante)        
     return render(request, 'editar_representante.html', {'form': form, 'id': id})
+
+def entrar(request):
+    
+    if request.method == 'POST':
+        formulario = AuthenticationForm(request, data=request.POST)
+        if formulario.is_valid():
+            
+            data = formulario.cleaned_data
+            usuario = data['username']
+            psw = data['password']
+
+            user = authenticate(request, username=usuario, password=psw)
+            if user:
+                login(request, user)
+                return render(request, 'inicio.html', {"mensaje": f'Bienvenido {usuario}'})
+            else:
+                return render(request, 'inicio.html', {'mensaje': f'Error, datos incorrectos.'})
+        else:
+            return render(request, 'inicio.html', {"mensaje": f'Formulario invalido'})  
+    else:
+        formulario = AuthenticationForm()
+        return render(request, 'login.html', {'formulario': formulario})
+
+def registrar(request):
+    
+    if request.method == 'POST':
+        formulario = UserCreationForm(request.POST)
+        if formulario.is_valid():
+            
+            data = formulario.cleaned_data
+            username = data['username']
+            formulario.save() 
+            return render(request, 'inicio.html', {"mensaje": f'Usuario {username} creado con éxito.'})
+            
+        else:
+            return render(request, 'inicio.html', {"mensaje": f'Formulario invalido'})  
+    else:
+        formulario = UserCreationForm()
+        return render(request, 'registro.html', {'formulario': formulario})
+    

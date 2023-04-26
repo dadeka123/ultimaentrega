@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from PreEntrega3.views import *
 from .views import *
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', inicio, name="inicio"),
@@ -14,7 +15,7 @@ urlpatterns = [
     path('buscarJugador/', buscarJugador, name="BuscarJugador"),
     path('busquedaRepresentante/', busquedaRepresentante, name='busquedaRepresentante'),
     path('buscarRepresentante/', buscarRepresentante, name="BuscarRepresentante"),
-    path('listaJugadores/', listaJugadores, name="ListaJugadores"),
+    path('listaJugadores/', JugadorListView.as_view(), name="ListaJugadores"),
     path('listaRepresentantes/', listaRepresentantes, name="ListaRepresentantes"),
     path('listaEquipos/', listaEquipos, name="ListaEquipos"),
     path('eliminaJugador/<id>', eliminarJugador, name="EliminarJugador"),
@@ -23,5 +24,8 @@ urlpatterns = [
     path('editarJugador/<id>/', editar_jugador, name='EditarJugador'),
     path('editarEquipo/<id>/', editar_equipo, name='EditarEquipo'),
     path('editarRepresentante/<id>/', editar_representante, name='EditarRepresentante'),
+    path('login/', entrar, name='Login'),
+    path('registrar/', registrar, name='Register'),
+    path('salir/', LogoutView.as_view(template_name='salir.html'), name='Salir'),
 ]
 
