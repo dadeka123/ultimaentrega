@@ -16,8 +16,8 @@ urlpatterns = [
     path('busquedaRepresentante/', busquedaRepresentante, name='busquedaRepresentante'),
     path('buscarRepresentante/', buscarRepresentante, name="BuscarRepresentante"),
     path('listaJugadores/', JugadorListView.as_view(), name="ListaJugadores"),
-    path('listaRepresentantes/', listaRepresentantes, name="ListaRepresentantes"),
-    path('listaEquipos/', listaEquipos, name="ListaEquipos"),
+    path('listaRepresentantes/', RepresentanteListView.as_view(), name="ListaRepresentantes"),
+    path('listaEquipos/', EquipoListView.as_view(), name="ListaEquipos"),
     path('eliminaJugador/<id>', eliminarJugador, name="EliminarJugador"),
     path('eliminaRepresentante/<id>', eliminarRepresentante, name="EliminarRepresentante"),
     path('eliminaEquipo/<id>', eliminarEquipo, name="EliminarEquipo"),
@@ -25,7 +25,8 @@ urlpatterns = [
     path('editarEquipo/<id>/', editar_equipo, name='EditarEquipo'),
     path('editarRepresentante/<id>/', editar_representante, name='EditarRepresentante'),
     path('login/', entrar, name='Login'),
-    path('registrar/', registrar, name='Register'),
+    path('registrar/', registrar, name='Registro'),
     path('salir/', LogoutView.as_view(template_name='salir.html'), name='Salir'),
+    path('editar-perfil/', editar_perfil, name='EditarPerfil'),
 ]
 

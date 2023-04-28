@@ -3,20 +3,21 @@
 
 {% block contenidoQueCambia %}
 
+{% if user.is_authenticated %}
 <div id="wrapper" style="padding-top: 10px; position: relative;">
  
     {% for equipo, jugadores in jugadores_por_equipo.items %}
     <h1 style="margin-top: 10px; margin-left: 20px; color: yellow">{{ equipo.nombre_equipo }}</h1>
     <div style="margin-left: 20px;">
-        <button style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px;">
+        <button type="button" style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px;">
             <a href="{% url 'EditarEquipo' equipo.id %}" style="color: white; text-decoration: none;">Editar</a>
         </button>
 
-        <button>
-            <form action="{% url 'EliminarEquipo' equipo.id %}" method="POST">{% csrf_token %}
-                <button type="submit" style="background-color: gray; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;">Eliminar</button>
-            </form>
-        </div>
+        <form action="{% url 'EliminarEquipo' equipo.id %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="background-color: gray; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;">Eliminar</button>
+        </form>
+    </div>
         {% if jugadores %}
         <ul style="margin-top: 10px; margin-left: 20px">
             {% for jugador in jugadores %}
@@ -34,12 +35,17 @@
     {% endif %}
     {% endfor %}
 
-
     <div id="footer" style="position: absolute; bottom: 0; width: 100%">
         &copy; Copyright 2023 by Salvador Inetti |
         Design by Mamarracho Maker
     </div>
     
 </div>
+{% else %}
+<div style="margin-top: 50px; text-align: center;">
+    <h2>Debes iniciar sesión para ver este contenido.</h2>
+    <a href="{% url 'Login' %}">Iniciar sesión</a>
+</div>
+{% endif %}
 
 {% endblock contenidoQueCambia %}

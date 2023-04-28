@@ -5,9 +5,23 @@
 
 <div id="wrapper" style="padding-top: 15px; position: relative;">
 
-<form action="{% url 'Register' %}" method="POST">{% csrf_token %}
-    {{ formulario.as_p }}
-    <button type="submit">Registar</button>
+<h1 style="color: yellow; font-size: 16px;">Registro</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <div style="color: yellow; font-size: 16px;">
+        {{ formulario.username.label_tag }}
+        {{ formulario.username }}
+    </div>
+    <div style="color: yellow; font-size: 16px;">
+        {{ formulario.password1.label_tag }}
+        {{ formulario.password1 }}
+    </div>
+    <div style="color: yellow; font-size: 16px;">
+        {{ formulario.password2.label_tag }}
+        {{ formulario.password2 }}
+    </div>
+    <button type="submit">Registrarse</button>
 </form>
 
 <div id="footer" style="position: absolute; bottom: 0; width: 100%">

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Equipo(models.Model):
@@ -45,4 +46,7 @@ class Representante(models.Model):
     def jugadores_contratados_nombre_apellido(self):
         return self.jugadores_contratados.all().values_list('nombre', 'apellido')
 
- 
+class Avatar(models.Model):
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    image = models.ImageField(upload_to='avatares', null=True, blank=True)

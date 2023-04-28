@@ -5,21 +5,42 @@
 
 <div id="wrapper" style="padding-top: 15px; position: relative;">
 
-<h4>{{mensaje}}</h4>
-
-
-{% if user.is_authenticated %}
-    <a class="btn btn-primary" href="{% url 'Salir' %}"> Salir</a>
+  {% if user.is_authenticated %}
+  <div style="display: flex; align-items: center;">
+    <h4 style="margin-right: 10px; color: yellow; font-size: 16px;">Bienvenido {{user.username}}</h4>
+      {% if url %}
+          <img src='{{url}}' alt='avatar' style='width: 50px; height: 50px;'>
+      {% endif %}
+  </div>
+  
+  <form method="POST" action="{% url 'EditarPerfil' %}" style="display: inline-block; margin-right: 5px;">
+    {% csrf_token %}
+    <button type="submit" style="background-color: gray; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;">Editar perfil</button>
+  </form>
+  
+  <form method="POST" action="{% url 'Salir' %}" style="display: inline-block;">
+    {% csrf_token %}
+    <button type="submit" style="background-color: gray; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;">Cerrar sesión</button>
+  </form>
 {% else %}
-    <a class="btn btn-primary" href="{% url 'Login' %}"> Iniciar</a>
+  <div style="display: flex;">
+    <form method="POST" action="{% url 'Login' %}" style="margin-right: 5px;">
+        {% csrf_token %}
+        {{ formulario.as_p }}
+        <button type="submit" style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px; color: white;">Iniciar sesión</button>
+    </form>
+
+    <a href="{% url 'Registro' %}" style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 12px; text-decoration: none; color: white;">Registrarse</a>
+  </div>
+
 {% endif %}
-    
+
 
 <div id="footer" style="position: absolute; bottom: 0; width: 100%">
     &copy; Copyright 2023 by Salvador Inetti |
     Design by Mamarracho Maker
-  </div>
-    
+</div>
+
 </div>
 
 {% endblock contenidoQueCambia %}

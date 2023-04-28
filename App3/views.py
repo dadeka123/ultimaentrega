@@ -1,12 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
-from .forms import EquipoForm, JugadorForm, RepresentanteForm
+from django.http import HttpResponseRedirect
+from .forms import EquipoForm, JugadorForm, RepresentanteForm, UserEditForm, CustomUserCreationForm
 from .models import *
-from django.views.generic import ListView, DeleteView
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.views.generic import ListView
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
+def inicio(request):
+    try:
+        avatar = Avatar.objects.get(user=request.user)
+        if avatar.image:
+            url = avatar.image.url
+        else:
+            url = ''
+    except Avatar.DoesNotExist:
+        url = ''
+
+    return render(request, 'inicio.html', {'url': url})
+
 
 def agregar_equipo(request):
     if request.method == 'POST':
@@ -94,17 +109,10 @@ def buscarRepresentante(request):
         form = RepresentanteForm()
         return render(request, "busquedaRepresentante.html", {'form': form, 'errors': form.errors})
 
-def listaJugadores(LoginRequiredMixin, request):
-    
-    equipos = Equipo.objects.all()
-    jugadores_por_equipo = {}
-    for equipo in equipos:
-        jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
-    return render(request, 'listaJugadores.html', {'jugadores_por_equipo': jugadores_por_equipo})
-
 class JugadorListView(LoginRequiredMixin, ListView):
     model = Jugador
     template_name = 'listaJugadores.html'
+    login_url = '/App3/login/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,21 +122,53 @@ class JugadorListView(LoginRequiredMixin, ListView):
             jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
         context['jugadores_por_equipo'] = jugadores_por_equipo
         return context
-
-def listaRepresentantes(request):
     
-    representantes = Representante.objects.all()
-    jugadores_por_representante = {}
-    for representante in representantes:
-        jugadores_por_representante[representante] = Jugador.objects.filter(representante=representante)
-    return render(request, 'listaRepresentantes.html', {'jugadores_por_representante': jugadores_por_representante})
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.add_message(request, messages.ERROR, 'Debe iniciar sesión para acceder a esta página')
+        return super().dispatch(request, *args, **kwargs)
 
-def listaEquipos(request):
-    equipos = Equipo.objects.all()
-    jugadores_por_equipo = {}
-    for equipo in equipos:
-        jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
-    return render(request, 'listaEquipos.html', {'equipos': equipos, 'jugadores_por_equipo': jugadores_por_equipo})
+class RepresentanteListView(LoginRequiredMixin, ListView):
+    model = Representante
+    template_name = 'listaRepresentantes.html'
+    login_url = '/App3/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        representantes = Representante.objects.all()
+        jugadores_por_representante = {}
+        for representante in representantes:
+            jugadores_por_representante[representante] = Jugador.objects.filter(representante=representante)
+        context['jugadores_por_representante'] = jugadores_por_representante
+        return context
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.add_message(request, messages.ERROR, 'Debe iniciar sesión para acceder a esta página')
+        return super().dispatch(request, *args, **kwargs)
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class EquipoListView(LoginRequiredMixin, ListView):
+    model = Equipo
+    template_name = 'listaEquipos.html'
+    login_url = '/App3/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        equipos = Equipo.objects.all()
+        jugadores_por_equipo = {}
+        for equipo in equipos:
+            jugadores_por_equipo[equipo] = Jugador.objects.filter(equipo=equipo)
+        context['equipos'] = equipos
+        context['jugadores_por_equipo'] = jugadores_por_equipo
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.add_message(request, messages.ERROR, 'Debe iniciar sesión para acceder a esta página')
+        return super().dispatch(request, *args, **kwargs)
+
 
 def eliminarJugador(request, id):
     
@@ -155,6 +195,10 @@ def eliminarRepresentante(request, id):
         representante.delete()
         return redirect('/App3/listaRepresentantes/')
 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+@login_required(login_url='/login/')
 def editar_jugador(request, id):
     jugador = Jugador.objects.get(id=id)
     
@@ -169,6 +213,9 @@ def editar_jugador(request, id):
         form = JugadorForm(instance=jugador)        
     return render(request, 'editar_jugador.html', {'form': form, 'id': id})
 
+
+
+@login_required
 def editar_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     
@@ -183,6 +230,7 @@ def editar_equipo(request, id):
         form = EquipoForm(instance=equipo)        
     return render(request, 'editar_equipo.html', {'form': form, 'id': id})
 
+@login_required
 def editar_representante(request, id):
     representante = Representante.objects.get(id=id)
     
@@ -197,42 +245,64 @@ def editar_representante(request, id):
         form = RepresentanteForm(instance=representante)        
     return render(request, 'editar_representante.html', {'form': form, 'id': id})
 
+from django.contrib import messages
+from django.views.decorators.cache import never_cache
+
+@never_cache
 def entrar(request):
-    
     if request.method == 'POST':
         formulario = AuthenticationForm(request, data=request.POST)
         if formulario.is_valid():
-            
             data = formulario.cleaned_data
             usuario = data['username']
             psw = data['password']
-
             user = authenticate(request, username=usuario, password=psw)
-            if user:
+            if user is not None:
                 login(request, user)
-                return render(request, 'inicio.html', {"mensaje": f'Bienvenido {usuario}'})
+                messages.success(request, f'Ingresaste con')
+                return redirect('inicio')
             else:
-                return render(request, 'inicio.html', {'mensaje': f'Error, datos incorrectos.'})
+                messages.error(request, 'Error, datos incorrectos.')
         else:
-            return render(request, 'inicio.html', {"mensaje": f'Formulario invalido'})  
+            messages.error(request, 'Formulario invalido.')
     else:
         formulario = AuthenticationForm()
-        return render(request, 'login.html', {'formulario': formulario})
+    return render(request, 'login.html', {'formulario': formulario})
 
 def registrar(request):
-    
     if request.method == 'POST':
-        formulario = UserCreationForm(request.POST)
+        formulario = CustomUserCreationForm(request.POST)
         if formulario.is_valid():
-            
-            data = formulario.cleaned_data
-            username = data['username']
-            formulario.save() 
-            return render(request, 'inicio.html', {"mensaje": f'Usuario {username} creado con éxito.'})
-            
-        else:
-            return render(request, 'inicio.html', {"mensaje": f'Formulario invalido'})  
+            formulario.save()
+            username = formulario.cleaned_data.get('username')
+            mensaje = f'Usuario {username} creado con éxito.'
+            return redirect(reverse('inicio') + f'?mensaje={mensaje}')
     else:
-        formulario = UserCreationForm()
-        return render(request, 'registro.html', {'formulario': formulario})
-    
+        formulario = CustomUserCreationForm()
+    return render(request, 'registro.html', {'formulario': formulario})
+ 
+@never_cache    
+@login_required     
+def editar_perfil(request):
+    usuario = request.user
+
+    if request.method == 'POST':
+        formulario = UserEditForm(request.POST, instance=request.user)
+
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            usuario.email = data['email']
+            usuario.first_name = data['first_name']
+            usuario.last_name = data['last_name']
+            usuario.set_password(data["password1"])
+            usuario.save()
+
+            messages.success(request, 'Datos actualizados.')
+            return redirect('inicio')
+        else:
+            if formulario.errors.get('password2') and 'passwords do not match' in formulario.errors['password2']:
+                formulario.add_error('password2', 'Las contraseñas no coinciden.')
+            return render(request, 'editarPerfil.html', {'formulario': formulario})
+    else:
+        formulario = UserEditForm(instance=request.user)
+        return render(request, 'editarPerfil.html', {'formulario': formulario})

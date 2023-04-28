@@ -6,8 +6,18 @@
 <div id="wrapper" style="padding-top: 15px; position: relative;">
 
 <form method="POST">{% csrf_token %}
-    {{ formulario.as_p }}
-    <button type="submit">Iniciar sesión</button>
+    <div class="form-group">
+        <label for="{{ formulario.username.id_for_label }}" style="color: yellow; font-size: 16px;">Usuario</label>
+        {{ formulario.username }}
+    </div>
+    <div class="form-group">
+        <label for="{{ formulario.password.id_for_label }}" style="color: yellow; font-size: 16px;">Contraseña</label>
+        {{ formulario.password }}
+    </div>
+    <button type="submit" style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display:: inline-block; font-size: 14px;">
+        <span style="color: white;">Iniciar sesión</span>
+    </button>
+    
 </form>
 
 <div id="footer" style="position: absolute; bottom: 0; width: 100%">
