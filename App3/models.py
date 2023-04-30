@@ -31,7 +31,10 @@ class Jugador(models.Model):
     def __str__(self):
         titular_str = "Titular" if self.titular else "Suplente"
         return f"Nombre: {self.nombre} {self.apellido} - Edad: {self.edad} - Equipo: {self.equipo.nombre_equipo} - Posición: {self.get_posicion_display()} - {titular_str}"
-   
+        
+    def get_titular_display(self):
+        return "Titular" if self.titular else "Suplente"
+
 
 class Representante(models.Model):
     nombre = models.CharField(max_length=100)

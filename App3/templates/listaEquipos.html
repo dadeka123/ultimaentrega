@@ -9,7 +9,7 @@
     {% for equipo, jugadores in jugadores_por_equipo.items %}
     <h1 style="margin-top: 10px; margin-left: 20px; color: yellow">{{ equipo.nombre_equipo }}</h1>
     <div style="margin-left: 20px;">
-        <button type="button" style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px;">
+        <button type="button" style="background-color: gray; margin-top: 10px; magrin-topborder: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px;">
             <a href="{% url 'EditarEquipo' equipo.id %}" style="color: white; text-decoration: none;">Editar</a>
         </button>
 

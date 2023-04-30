@@ -8,14 +8,15 @@
 {% for representante, jugadores in jugadores_por_representante.items %}
     <h1 style="margin-top: 10px; margin-left: 20px; color: yellow">{{ representante.nombre }} {{ representante.apellido }}</h1>
     <div style="margin-left: 20px;">
-        <button style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px;">
+        <<button style="background-color: gray; border: none; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px; margin-bottom: 10px;">
             <a href="{% url 'EditarRepresentante' representante.id %}" style="color: white; text-decoration: none;">Editar</a>
         </button>
 
-        <button>
+        <button style="margin-top: 25px;">
             <form action="{% url 'EliminarRepresentante' representante.id %}" method="POST">{% csrf_token %}
                 <button type="submit" style="background-color: gray; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px;">Eliminar</button>
             </form>
+        </button>
     </div>
 {% if jugadores %}
         <ul style="margin-top: 10px; margin-left: 20px">

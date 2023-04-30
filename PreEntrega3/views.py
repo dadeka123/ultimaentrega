@@ -60,3 +60,8 @@ def agregar_jugador(self, nombre, equipo):
 def inicio(self):
     
     return render(self, "inicio.html")
+
+
+@login_required
+def my_view(request):
+    messages.error(request, "This is an error message.", extra_tags='danger')

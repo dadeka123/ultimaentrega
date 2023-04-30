@@ -11,6 +11,18 @@
     <h1 style="color: yellow; font-size: 36px;">La numbah one de fuchibola</h1>
   </div>
 {% include 'navbar.html' %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div style="font-size: 16px; color: yellow" class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+
  
 <div class="clear"></div>
 {% block contenidoQueCambia %}

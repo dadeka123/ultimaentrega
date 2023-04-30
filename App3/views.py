@@ -12,16 +12,11 @@ from django.urls import reverse
 
 def inicio(request):
     try:
-        avatar = Avatar.objects.get(user=request.user)
-        if avatar.image:
-            url = avatar.image.url
-        else:
-            url = ''
+        avatar = Avatar.objects.get(user=request.user.id)
+        url = avatar.image.url
     except Avatar.DoesNotExist:
-        url = ''
-
+        url = None
     return render(request, 'inicio.html', {'url': url})
-
 
 def agregar_equipo(request):
     if request.method == 'POST':
@@ -259,12 +254,10 @@ def entrar(request):
             user = authenticate(request, username=usuario, password=psw)
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Ingresaste con')
+                messages.success(request, f'Ingreso exitoso')
                 return redirect('inicio')
             else:
                 messages.error(request, 'Error, datos incorrectos.')
-        else:
-            messages.error(request, 'Formulario invalido.')
     else:
         formulario = AuthenticationForm()
     return render(request, 'login.html', {'formulario': formulario})
@@ -302,7 +295,7 @@ def editar_perfil(request):
         else:
             if formulario.errors.get('password2') and 'passwords do not match' in formulario.errors['password2']:
                 formulario.add_error('password2', 'Las contraseñas no coinciden.')
-            return render(request, 'editarPerfil.html', {'formulario': formulario})
+            return render(request, 'editarPerfil.html', {'formulario': formulario, 'usuario': usuario})
     else:
         formulario = UserEditForm(instance=request.user)
-        return render(request, 'editarPerfil.html', {'formulario': formulario})
+        return render(request, 'editarPerfil.html', {'formulario': formulario, 'usuario': usuario})

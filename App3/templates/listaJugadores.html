@@ -12,7 +12,7 @@
         <ul style="margin-top: 10px;">
             {% for jugador in jugadores %}
                 <li>
-                    <p style="color: yellow; font-size: 15px; margin-left: 30px">{{ jugador.nombre }} {{ jugador.apellido }} - Edad: {{ jugador.edad }} - Posición: {{ jugador.get_posicion_display }}</p>
+                    <p style="color: yellow; font-size: 15px; margin-left: 30px">{{ jugador.nombre }} {{ jugador.apellido }} - Edad: {{ jugador.edad }} - Posición: {{ jugador.get_posicion_display }} - {{ jugador.get_titular_display }}</p>
                 </li>
                 <div style="margin-left: 30px;">
 
